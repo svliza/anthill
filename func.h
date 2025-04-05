@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <memory>
 using namespace std;
 
 class Role
@@ -8,6 +9,7 @@ class Role
 public:
     Role(string cur_role);
     virtual void work() const=0;
+    string GetRole() {return current_role;}
 private:
     string current_role;
 };
@@ -47,6 +49,13 @@ public:
     void work() const override;
 };
 
+class Gatherer: public Role
+{
+public:
+    Gatherer();
+    void work() const override;
+};
+
 class Cleaner: public Role
 {
 public:
@@ -55,12 +64,12 @@ public:
 };
 
 
-class Ant: public Norole, public Nanny, public Soldier, public Pastuh, public Builder, public Cleaner
+class Ant: public Norole, public Nanny, public Soldier, public Pastuh, public Builder, public Gatherer, public Cleaner
 {
 private:
     int health;
     int age;
-    string role;
+    unique_ptr<Role>role;
 public:
     Ant();
     void change_role();

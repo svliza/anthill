@@ -8,8 +8,9 @@ Nanny::Nanny(): Role("Nanny"){}
 Soldier::Soldier(): Role("Soldier"){}
 Pastuh::Pastuh(): Role("Pastuh"){}
 Builder::Builder(): Role("Builder"){}
+Gatherer::Gatherer(): Role("Gatherer"){}
 Cleaner::Cleaner(): Role("Cleaner"){}
-Ant::Ant(): health(100), age(0), Norole(){}
+Ant::Ant(): health(100), age(0), role(make_unique<Norole>()){}
 
 void Norole::work() const
 {
@@ -36,6 +37,11 @@ void Builder::work() const
     cout<<"Current role is a Builder."<<endl;
 }
 
+void Gatherer::work() const
+{
+    cout<<"Current role is a Gatherer."<<endl;
+}
+
 void Cleaner::work() const
 {
     cout<<"Current role is a Cleaner."<<endl;
@@ -45,30 +51,37 @@ void Ant::change_role()
 {
     if (age<10)
     {
-        Norole();
+        role=make_unique<Norole>();
     }
     else if (age<18)
     {
-        Nanny();
+        role=make_unique<Nanny>();
     }
     else if (age<30)
     {
         if (health>=50)
         {
-            Soldier();
+            role=make_unique<Soldier>();
         }
         else
         {
-            Pastuh();
+            role=make_unique<Pastuh>();
         }
     }
     else if (age<45)
     {
-        Builder();
+        if (health>=50)
+        {
+            role=make_unique<Gatherer>();
+        }
+        else
+        {
+            role=make_unique<Soldier>();
+        }
     }
     else
     {
-        Cleaner();
+        role=make_unique<Cleaner>();
     }
 }
 
@@ -86,6 +99,7 @@ void Ant::change_health(int current_health)
 
 void Ant::print() const
 {
-
-    cout<<"Age: "<<age<<", health: "<<health<<endl;
+    cout<<"Age: "<<age<<", health: "<<health<<". ";
+    role->work();
+    cout<<endl;
 }
