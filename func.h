@@ -14,7 +14,8 @@ private:
 
 class Norole: public Role
 {
-    Norole(string cur_role): Role(cur_role){}
+public:
+    Norole(): Role("Norole"){}
     void work() const override
     {
         cout<<"There is no role at the moment."<<endl;
@@ -23,7 +24,8 @@ class Norole: public Role
 
 class Nanny: public Role
 {
-    Nanny(string cur_role): Role(cur_role){}
+public:
+    Nanny(): Role("Nanny"){}
     void work() const override
     {
         cout<<"Current role is a Nanny."<<endl;
@@ -32,7 +34,8 @@ class Nanny: public Role
 
 class Soldier: public Role
 {
-    Soldier(string cur_role): Role(cur_role){}
+public:
+    Soldier(): Role("Soldier"){}
     void work() const override
     {
         cout<<"Current role is a Soldier."<<endl;
@@ -41,7 +44,8 @@ class Soldier: public Role
 
 class Pastuh: public Role
 {
-    Pastuh(string cur_role): Role(cur_role){}
+public:
+    Pastuh(): Role("Pastuh"){}
     void work() const override
     {
         cout<<"Current role is a Pastuh."<<endl;
@@ -50,7 +54,8 @@ class Pastuh: public Role
 
 class Builder: public Role
 {
-    Builder(string cur_role): Role(cur_role){}
+public:
+    Builder(): Role("Builder"){}
     void work() const override
     {
         cout<<"Current role is a Builder."<<endl;
@@ -59,7 +64,8 @@ class Builder: public Role
 
 class Cleaner: public Role
 {
-    Cleaner(string cur_role): Role(cur_role){}
+public:
+    Cleaner(): Role("Cleaner"){}
     void work() const override
     {
         cout<<"Current role is a Cleaner."<<endl;
@@ -67,10 +73,59 @@ class Cleaner: public Role
 };
 
 
-class Ant
+class Ant: public Norole, public Nanny, public Soldier, public Pastuh, public Builder, public Cleaner
 {
-public:
+private:
     int health;
     int age;
-    Ant(): health(100), age(0){}
+public:
+    Ant(): health(100), age(0), Norole(){}
+
+    void change_role()
+    {
+        if (age<10)
+        {
+            Norole();
+        }
+        else if (age<18)
+        {
+            Nanny();
+        }
+        else if (age<30)
+        {
+            if (health>=50)
+            {
+                Soldier();
+            }
+            else
+            {
+                Pastuh();
+            }
+        }
+        else if (age<45)
+        {
+            Builder();
+        }
+        else
+        {
+            Cleaner();
+        }
+    }
+
+    void change_age()
+    {
+        age+=1;
+        change_role();
+    }
+
+    void change_health(int current_health)
+    {
+        health=current_health;
+        change_role();
+    }
+
+    void print()
+    {
+        cout<<"Age: "<<age<<", health: "<<health<<endl;
+    }
 };
