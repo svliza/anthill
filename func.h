@@ -58,10 +58,10 @@ public:
 class Ant: public Norole, public Nanny, public Soldier, public Pastuh, public Builder, public Cleaner
 {
 private:
-    int health;
     int age;
     string role;
 public:
+    int health;
     Ant();
     void change_role();
     void change_age();
@@ -73,12 +73,23 @@ public:
 class Anthill
 {
 private:
-    int size;
+    int size_of_anthill;
+    int branch;
     int count_of_ants;
+    int maxAnts;
     int count_of_food;
+    int maxFood;
+    vector<Ant*> ants;
+
 public:
-    int time = 0;
+    // int time = 0;
     Anthill(int size, int ants, int food);
+    void createAnt(vector<Ant *>& a, int k);
+    void newFood(int f);
+    void newBranches(int b);
+    void newAnts(int k);
+    void emptyfood();
+    void lowbranch(); // если ветки не приносили, эта ф-я уменьшает размер муравейника
 };
 
 

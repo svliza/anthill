@@ -1,5 +1,6 @@
 #include "func.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 
 Role::Role(string cur_role): current_role(cur_role){}
@@ -88,5 +89,72 @@ void Ant::print() const
 {
 
     cout<<"Age: "<<age<<", health: "<<health<<endl;
+}
+
+Anthill::Anthill(int size, int cant, int food): size_of_anthill(size), count_of_ants(cant), count_of_food(food), branch(0),
+maxAnts(1000), maxFood(1000)
+{
+    createAnt(ants, count_of_ants);
+}
+
+void Anthill::createAnt(vector<Ant *> &a, int k)
+{
+    for(int i = 0; i < k; i++) {
+        Ant* temp = new Ant();
+        a.push_back(temp);
+    }
+}
+
+
+void Anthill::newFood(int f)
+{
+    if(count_of_food < maxFood) {
+        if(count_of_food + f <= maxFood) count_of_food+=f;
+        else count_of_food = maxFood;
+    }
+}
+
+void Anthill::newBranches(int b)
+{
+    if(b >= 10) {
+        size_of_anthill+= b/10;
+        maxAnts+=b/4;
+    }
+
+}
+
+void Anthill::newAnts(int k)
+{
+    if(count_of_ants < maxAnts) {
+       if(count_of_ants+k <= maxAnts) {
+            count_of_ants+=k;
+            createAnt(ants, k);
+       }
+       else {
+        createAnt(ants, maxAnts-count_of_ants);
+        count_of_ants = maxAnts; 
+       }
+    }
+}
+
+void Anthill::emptyfood()
+{
+    for(int i = 0; i < count_of_ants;i++) {
+        ants[i]->health -=15;
+        if(ants[i]->health <=0) {
+            ants.erase(ants.begin() + i);
+            i--;
+        }
+    }
+}
+
+void Anthill::lowbranch()
+{
+    size_of_anthill*=0.95;
+    maxAnts*=0.95;
+    if(count_of_ants > maxAnts) {
+        count_of_ants = maxAnts;
+        ants.resize(maxAnts);
+    }
 }
 
