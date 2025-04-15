@@ -44,6 +44,23 @@ public:
     void notifyAll(const string& message_) override;
 };
 
+class CleanerInformer : public IInformer {
+private:
+    vector<IObserver*> observers;
+public:
+    void subscribe(IObserver* observer_) override;
+    void unsubscribe(IObserver* observer_) override;
+    void notifyAll(const string& message_) override;
+};
+
+class PastuhInformer : public IInformer {
+private:
+    vector<IObserver*> observers;
+public:
+    void subscribe(IObserver* observer_) override;
+    void unsubscribe(IObserver* observer_) override;
+    void notifyAll(const string& message_) override;
+};
 
 
 class Role {
@@ -108,10 +125,12 @@ private:
     int health;
     SoldierInformer& soldierInformer; 
     BuilderInformer& builderInformer; 
-    NannyInformer& nannyInformer; 
+    NannyInformer& nannyInformer;
+    CleanerInformer& cleanerInformer; 
+    PastuhInformer& pastuhInformer; 
 
 public:
-    Ant(SoldierInformer& sInformer, BuilderInformer& bInformer, NannyInformer& nInformer);
+    Ant(SoldierInformer& sInformer, BuilderInformer& bInformer, NannyInformer& nInformer, CleanerInformer& cInformer, PastuhInformer& pInformer);
     ~Ant();
     void change_role();
     void change_age();
@@ -139,7 +158,9 @@ private:
     vector<Ant*> ants;
     SoldierInformer soldierInformer; 
     BuilderInformer builderInformer; 
-    NannyInformer nannyInformer; 
+    NannyInformer nannyInformer;
+    CleanerInformer cleanerInformer; 
+    PastuhInformer pastuhInformer; 
 
 public:
     Anthill(int size, int ants, int food);
@@ -156,7 +177,10 @@ public:
     vector<Ant*>& getAllAnts();
     SoldierInformer& getSoldierInformer() { return soldierInformer; } 
     BuilderInformer& getBuilderInformer() { return builderInformer; }
-    NannyInformer& getNannyInformer() { return nannyInformer; } 
+    NannyInformer& getNannyInformer() { return nannyInformer; }
+    CleanerInformer& getCleanerInformer() { return cleanerInformer; }
+    PastuhInformer& getPastuhInformer() { return pastuhInformer; }
+    
 };
 
 class Enemy {

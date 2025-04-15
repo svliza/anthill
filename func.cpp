@@ -7,15 +7,6 @@ using namespace std;
 Role::Role(string cur_role) : current_role(cur_role) {}
 string Role::getRoleName() const { return current_role; }
 
-Norole::Norole() : Role("Norole") {}
-void Norole::work() const { cout << "There is no role at the moment." << endl; }
-void Norole::notify(const string& message_) 
-{
-    if (message_ == "Food!") 
-    {
-        cout << "Norole сообщает: Нужно собирать еду!" << endl;
-    }
-}
 
 Nanny::Nanny() : Role("Nanny") {}
 void Nanny::work() const { cout << "Current role is a Nanny." << endl; }
@@ -69,9 +60,8 @@ void Cleaner::notify(const string& message_)
 }
 
 
-Ant::Ant(SoldierInformer& informer, BuilderInformer& bInformer, NannyInformer& nInformer)
-    : age(0), role(new Norole()), health(100), soldierInformer(informer), builderInformer(bInformer), nannyInformer(nInformer) {}
-
+Ant::Ant(SoldierInformer& sInformer, BuilderInformer& bInformer, NannyInformer& nInformer, CleanerInformer& cInformer, PastuhInformer& pInformer)
+    : age(0), role(new Norole()), health(100), soldierInformer(sInformer), builderInformer(bInformer), nannyInformer(nInformer), cleanerInformer(cInformer), pastuhInformer(pInformer) {}
 Ant::~Ant() { delete role; }
 
 void Ant::change_role() {
@@ -159,18 +149,22 @@ void Ant::setHealth(int h)
     health = h;
 }
 
-void Ant::notify(const string& message_) 
-{
+void Ant::notify(const string& message_) {
     cout << "Ant (" << getRoleName() << ") получил сообщение: " << message_ << endl;
-    if (message_ == "Enemy!")
-    {
-        if (getRoleName() == "Soldier") 
-        {
-            cout << "A soldier rushes into action!" << endl;
+    if (message_ == "Enemy!") {
+        if (getRoleName() == "Soldier") {
+            cout << "Солдат бросается в бой!" << endl;
+        }
+    } else if (message_ == "Food!") {
+        if (getRoleName() == "Cleaner") {
+            cout << "Cleaner начинает убирать!" << endl;
+        }
+    } else if (message_ == "NewAnts!") {
+        if (getRoleName() == "Pastuh") {
+            cout << "Pastuh следит за новыми муравьями!" << endl;
         }
     }
 }
-
 void SoldierInformer::subscribe(IObserver* observer_) 
 {
     observers.push_back(observer_);
@@ -226,11 +220,37 @@ void NannyInformer::notifyAll(const string& message_)
         observer->notify(message_);
     }
 }
+void CleanerInformer::subscribe(IObserver* observer_) {
+    observers.push_back(observer_);
+}
+
+void CleanerInformer::unsubscribe(IObserver* observer_) {
+    observers.erase(remove(observers.begin(), observers.end(), observer_), observers.end());
+}
+
+void CleanerInformer::notifyAll(const string& message_) {
+    for (auto* observer : observers) {
+        observer->notify(message_);
+    }
+}
+
+void PastuhInformer::subscribe(IObserver* observer_) {
+    observers.push_back(observer_);
+}
+
+void PastuhInformer::unsubscribe(IObserver* observer_) {
+    observers.erase(remove(observers.begin(), observers.end(), observer_), observers.end());
+}
+
+void PastuhInformer::notifyAll(const string& message_) {
+    for (auto* observer : observers) {
+        observer->notify(message_);
+    }
+}
 
 Anthill::Anthill(int size, int cant, int food)
     : size_of_anthill(size), count_of_ants(cant), count_of_food(food), branch(0),
-      maxAnts(1000), maxFood(1000), soldierInformer(), builderInformer(), nannyInformer() 
-      {
+      maxAnts(1000), maxFood(1000), soldierInformer(), builderInformer(), nannyInformer(), cleanerInformer(), pastuhInformer() {
     createAnt(ants, count_of_ants);
 }
 
@@ -239,11 +259,9 @@ Anthill::~Anthill()
     for (auto a : ants) delete a;
 }
 
-void Anthill::createAnt(vector<Ant*>& a, int k) 
-{
-    for (int i = 0; i < k; i++) 
-    {
-        Ant* temp = new Ant(soldierInformer, builderInformer, nannyInformer);
+void Anthill::createAnt(vector<Ant*>& a, int k) {
+    for (int i = 0; i < k; i++) {
+        Ant* temp = new Ant(soldierInformer, builderInformer, nannyInformer, cleanerInformer, pastuhInformer);
         a.push_back(temp);
     }
 }
