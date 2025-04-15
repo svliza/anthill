@@ -5,19 +5,22 @@
 #include <memory>
 using namespace std;
 
-class IObserver {
+class IObserver 
+{
 public:
     virtual void notify(const string& message_) = 0;
 };
 
-class IInformer {
+class IInformer 
+{
 public:
     virtual void subscribe(IObserver* observer_) = 0;
     virtual void unsubscribe(IObserver* observer_) = 0;
     virtual void notifyAll(const string& message_) = 0;
 };
 
-class SoldierInformer : public IInformer {
+class SoldierInformer : public IInformer 
+{
 private:
     vector<IObserver*> observers;
 public:
@@ -26,7 +29,8 @@ public:
     void notifyAll(const string& message_) override;
 };
 
-class BuilderInformer : public IInformer {
+class BuilderInformer : public IInformer 
+{
 private:
     vector<IObserver*> observers;
 public:
@@ -35,7 +39,8 @@ public:
     void notifyAll(const string& message_) override;
 };
 
-class NannyInformer : public IInformer {
+class NannyInformer : public IInformer 
+{
 private:
     vector<IObserver*> observers;
 public:
@@ -44,7 +49,8 @@ public:
     void notifyAll(const string& message_) override;
 };
 
-class CleanerInformer : public IInformer {
+class CleanerInformer : public IInformer 
+{
 private:
     vector<IObserver*> observers;
 public:
@@ -53,7 +59,8 @@ public:
     void notifyAll(const string& message_) override;
 };
 
-class PastuhInformer : public IInformer {
+class PastuhInformer : public IInformer 
+{
 private:
     vector<IObserver*> observers;
 public:
@@ -63,7 +70,8 @@ public:
 };
 
 
-class Role {
+class Role 
+{
 public:
     Role(string cur_role);
     virtual void work() const = 0; 
@@ -75,42 +83,48 @@ protected:
 };
 
 
-class Norole : public Role {
+class Norole : public Role 
+{
 public:
     Norole();
     void work() const override;
     void notify(const string& message_) override;
 };
 
-class Nanny : public Role {
+class Nanny : public Role 
+{
 public:
     Nanny();
     void work() const override;
     void notify(const string& message_) override;
 };
 
-class Soldier : public Role {
+class Soldier : public Role 
+{
 public:
     Soldier();
     void work() const override;
     void notify(const string& message_) override;
 };
 
-class Pastuh : public Role {
+class Pastuh : public Role 
+{
 public:
     Pastuh();
     void work() const override;
     void notify(const string& message_) override;
 };
 
-class Builder : public Role {
+class Builder : public Role 
+{
 public:
     Builder();
     void work() const override;
     void notify(const string& message_) override;
 };
 
-class Cleaner : public Role {
+class Cleaner : public Role 
+{
 public:
     Cleaner();
     void work() const override;
@@ -118,7 +132,8 @@ public:
 };
 
 
-class Ant : public IObserver {
+class Ant : public IObserver 
+{
 private:
     int age;
     Role* role;
@@ -183,7 +198,8 @@ public:
     
 };
 
-class Enemy {
+class Enemy 
+{
 private:
     int strength;
 
