@@ -26,61 +26,92 @@ public:
     void notifyAll(const string& message_) override;
 };
 
+class BuilderInformer : public IInformer {
+private:
+    vector<IObserver*> observers;
+public:
+    void subscribe(IObserver* observer_) override;
+    void unsubscribe(IObserver* observer_) override;
+    void notifyAll(const string& message_) override;
+};
+
+class NannyInformer : public IInformer {
+private:
+    vector<IObserver*> observers;
+public:
+    void subscribe(IObserver* observer_) override;
+    void unsubscribe(IObserver* observer_) override;
+    void notifyAll(const string& message_) override;
+};
+
+
+
 class Role {
 public:
     Role(string cur_role);
-    virtual void work() const = 0;
+    virtual void work() const = 0; 
     virtual string getRoleName() const;
+    virtual void notify(const string& message_) = 0; 
     virtual ~Role() = default;
 protected:
     string current_role;
 };
 
+
 class Norole : public Role {
 public:
     Norole();
     void work() const override;
+    void notify(const string& message_) override;
 };
 
 class Nanny : public Role {
 public:
     Nanny();
     void work() const override;
+    void notify(const string& message_) override;
 };
 
 class Soldier : public Role {
 public:
     Soldier();
     void work() const override;
+    void notify(const string& message_) override;
 };
 
 class Pastuh : public Role {
 public:
     Pastuh();
     void work() const override;
+    void notify(const string& message_) override;
 };
 
 class Builder : public Role {
 public:
     Builder();
     void work() const override;
+    void notify(const string& message_) override;
 };
 
 class Cleaner : public Role {
 public:
     Cleaner();
     void work() const override;
+    void notify(const string& message_) override;
 };
+
 
 class Ant : public IObserver {
 private:
     int age;
     Role* role;
     int health;
-    SoldierInformer& informer; // Ссылка на информер
+    SoldierInformer& soldierInformer; 
+    BuilderInformer& builderInformer; 
+    NannyInformer& nannyInformer; 
 
 public:
-    Ant(SoldierInformer& informer); // Конструктор с параметром
+    Ant(SoldierInformer& sInformer, BuilderInformer& bInformer, NannyInformer& nInformer);
     ~Ant();
     void change_role();
     void change_age();
@@ -95,16 +126,20 @@ public:
     void notify(const string& message_) override;
 };
 
-class Anthill {
+
+class Anthill 
+{
 private:
     int size_of_anthill;
     int branch;
     int count_of_ants;
-    int maxAnts; // Максимальное количество муравьев
+    int maxAnts; 
     int count_of_food;
-    int maxFood; // Максимальное количество еды
+    int maxFood; 
     vector<Ant*> ants;
-    SoldierInformer informer; // Информер
+    SoldierInformer soldierInformer; 
+    BuilderInformer builderInformer; 
+    NannyInformer nannyInformer; 
 
 public:
     Anthill(int size, int ants, int food);
@@ -119,7 +154,9 @@ public:
 
     Ant* getAnt(int i);
     vector<Ant*>& getAllAnts();
-    SoldierInformer& getInformer() { return informer; } // Метод для получения информера
+    SoldierInformer& getSoldierInformer() { return soldierInformer; } 
+    BuilderInformer& getBuilderInformer() { return builderInformer; }
+    NannyInformer& getNannyInformer() { return nannyInformer; } 
 };
 
 class Enemy {
