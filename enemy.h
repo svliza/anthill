@@ -1,4 +1,4 @@
-#pragma once
+
 #include "anthill.h"
 using namespace std;
 
