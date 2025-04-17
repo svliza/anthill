@@ -30,6 +30,7 @@ public:
 
     Ant* getAnt(int i);
     vector<Ant*>& getAllAnts();
+
     SoldierInformer& getSoldierInformer() { return soldierInformer; } 
     BuilderInformer& getBuilderInformer() { return builderInformer; }
     NannyInformer& getNannyInformer() { return nannyInformer; }

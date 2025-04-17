@@ -5,6 +5,7 @@ Anthill::Anthill(int size, int cant, int food)
     createAnt(ants, count_of_ants);
 }
 
+
 Anthill::~Anthill() 
 {
     for (auto a : ants) delete a;

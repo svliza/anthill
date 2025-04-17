@@ -1,12 +1,14 @@
 #pragma once
 #include <SFML-3.0.0\include\SFML\Graphics.hpp>
+#include <cmath>
 #include "ant.h"
 #include "anthill.h"
+
 class SFMLAnt {
 private:
     sf::CircleShape shape;
     Ant* ant;
-    sf::Font font;
+    static sf::Font font;
     sf::Text roleText;
     
 public:
@@ -23,11 +25,12 @@ private:
     sf::CircleShape shape;
     Anthill* anthill;
     std::vector<SFMLAnt> sfmlAnts;
+    sf::Vector2f position;  // Добавлено отсутствующее поле
     
 public:
     SFMLAnthill(Anthill* anthill, float x, float y);
     void update();
     void draw(sf::RenderWindow& window);
-    void addAnt(SFMLAnt& ant);
+    void addAnt(const SFMLAnt& ant);
     std::vector<SFMLAnt>& getSFMLAnts() { return sfmlAnts; }
 };
