@@ -1,4 +1,5 @@
 #include "anthill.h"
+#include <vector>
 Anthill::Anthill(int size, int cant, int food)
     : size_of_anthill(size), count_of_ants(cant), count_of_food(food), branch(0),
     maxAnts(1000), maxFood(1000), soldierInformer(), builderInformer(), nannyInformer(), cleanerInformer(), pastuhInformer() {
@@ -67,7 +68,8 @@ void Anthill::lowbranch()
     {
         for (size_t i = maxAnts; i < ants.size(); ++i)
         {
-            delete ants[i];
+            death(i);
+            i--;
         }
         ants.resize(maxAnts);
         count_of_ants = maxAnts;
@@ -78,6 +80,23 @@ void Anthill::showAllAnts() const
 {
     for (const auto& a : ants)
         a->print();
+}
+
+void Anthill::controlLives()
+{
+
+    for(int i = 0; i < ants.size(); i++) {
+        ++ants[i]->age;
+        if(ants[i]->age > 10) {
+            death(i);
+            i--;
+        }
+    }
+}
+
+void Anthill::death(int i)
+{
+    ants.erase(ants.begin() + i);
 }
 
 Ant* Anthill::getAnt(int i)

@@ -10,7 +10,6 @@ private:
     int maxAnts;
     int count_of_food;
     int maxFood;
-    vector<Ant*> ants;
     SoldierInformer soldierInformer;
     BuilderInformer builderInformer;
     NannyInformer nannyInformer;
@@ -18,15 +17,18 @@ private:
     PastuhInformer pastuhInformer;
 
 public:
+    vector<Ant*> ants;
     Anthill(int size, int ants, int food);
     ~Anthill();
     void createAnt(vector<Ant*>& a, int k);
     void newFood(int f);
-    void newBranches(int b);
+    void newBranches(int b); 
     void newAnts(int k);
-    void emptyfood();
+    void emptyfood(); // если еды не хватило на всех, вызывается эта функция
     void lowbranch();
     void showAllAnts() const;
+    void controlLives(); // 
+    void death(int i); // убивает муравья
 
     Ant* getAnt(int i);
     vector<Ant*>& getAllAnts();

@@ -138,9 +138,7 @@ public:
 class Ant : public IObserver
 {
 private:
-    int age;
     Role* role;
-    int health;
     SoldierInformer& soldierInformer;
     BuilderInformer& builderInformer;
     NannyInformer& nannyInformer;
@@ -148,6 +146,8 @@ private:
     PastuhInformer& pastuhInformer;
 
 public:
+    int age = 0;
+    int health = 100;
     Ant(SoldierInformer& sInformer, BuilderInformer& bInformer, NannyInformer& nInformer, CleanerInformer& cInformer, PastuhInformer& pInformer);
     ~Ant();
     void change_role();

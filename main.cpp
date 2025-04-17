@@ -1,10 +1,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include <windows.h> // Для system("cls")
-#include "ant.h"
-#include "anthill.h"
-#include "enemy.h"
+#include <windows.h> 
+#include "ant.cpp"
+#include "anthill.cpp"
+#include "enemy.cpp"
+
 
 using namespace std;
 

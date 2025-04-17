@@ -9,10 +9,10 @@ void Enemy::attack(Anthill& hill)
     hill.getSoldierInformer().notifyAll("Enemy!");
 
     bool soldier_found = false;
-    for (auto ant : hill.getAllAnts())
+    for(int i = 0; i < hill.ants.size(); i++)
     {
-        ant->notify("Enemy!");
-        if (ant->getHealth() > 0 && ant->getRoleName() == "Soldier")
+        hill.ants[i]->notify("Enemy!");
+        if (hill.ants[i]->health > 0 && hill.ants[i]->getRoleName() == "Soldier")
         {
             soldier_found = true;
             int result = rand() % 100;
@@ -23,11 +23,14 @@ void Enemy::attack(Anthill& hill)
             else if (result < 70)
             {
                 cout << "The soldier and the enemy both died." << endl;
-                ant->setHealth(0);
+                hill.death(i);
+                i--;
             }
             else
             {
                 cout << "The enemy has won, the anthill has lost its food!" << endl;
+                hill.death(i);
+                i--;
                 hill.newFood(-30);
             }
             return;
