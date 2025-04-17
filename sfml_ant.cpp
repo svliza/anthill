@@ -1,143 +1,91 @@
-#pragma once
-#include "sfml_ant.h"
-#include <SFML-3.0.0\include\SFML\Graphics.hpp>
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-#include <cmath>
-#include "ant.h"
 #include "anthill.h"
+Anthill::Anthill(int size, int cant, int food)
+    : size_of_anthill(size), count_of_ants(cant), count_of_food(food), branch(0),
+      maxAnts(1000), maxFood(1000), soldierInformer(), builderInformer(), nannyInformer(), cleanerInformer(), pastuhInformer() {
+    createAnt(ants, count_of_ants);
+}
 
-sf::Font SFMLAnt::font;
 
-SFMLAnt::SFMLAnt(Ant* ant, float x, float y) : ant(ant) {
-    // Загрузка шрифта (если ещё не загружен)
-    if (font.getInfo().family.empty()) {
-        if (!font.loadFromFile("arial.ttf")) {
-            std::cerr << "Ошибка загрузки шрифта!" << std::endl;
-            // Можно создать базовый шрифт, если загрузка не удалась
-            font.loadFromMemory(nullptr, 0);
+Anthill::~Anthill() 
+{
+    for (auto a : ants) delete a;
+}
+
+void Anthill::createAnt(vector<Ant*>& a, int k) {
+    for (int i = 0; i < k; i++) {
+        Ant* temp = new Ant(soldierInformer, builderInformer, nannyInformer, cleanerInformer, pastuhInformer);
+        a.push_back(temp);
+    }
+}
+
+void Anthill::newFood(int f) 
+{
+    count_of_food += f;
+    if (count_of_food < 0) count_of_food = 0;
+    if (count_of_food > maxFood) count_of_food = maxFood;
+}
+
+void Anthill::newBranches(int b) 
+{
+    if (b >= 10) 
+    {
+        size_of_anthill += b / 10;
+        maxAnts += b / 4;
+    }
+}
+
+void Anthill::newAnts(int k) 
+{
+    if (count_of_ants < maxAnts) 
+    {
+        int toCreate = min(k, maxAnts - count_of_ants);
+        createAnt(ants, toCreate);
+        count_of_ants += toCreate;
+    }
+}
+
+void Anthill::emptyfood() 
+{
+    for (size_t i = 0; i < ants.size(); ++i) 
+    {
+        ants[i]->setHealth(ants[i]->getHealth() - 15);
+        if (ants[i]->getHealth() <= 0) 
+        {
+            delete ants[i];
+            ants.erase(ants.begin() + i);
+            i--;
+            count_of_ants--;
         }
     }
-
-    // Настройка графического представления муравья
-    shape.setRadius(8.f);
-    shape.setOrigin({8.f, 8.f});
-    shape.setPosition({x, y});
-    shape.setOutlineThickness(1.f);
-    shape.setOutlineColor(sf::Color::Black);
-
-    // Настройка текста с ролью
-    roleText.setFont(font);  // Устанавливаем шрифт
-    roleText.setCharacterSize(12);
-    roleText.setFillColor(sf::Color::Black);
-    
-    update(); // Инициализация цвета и текста
 }
 
-void SFMLAnt::update() {
-    // Установка цвета в зависимости от роли
-    const std::string role = ant->getRoleName();
-    if (role == "Nanny") {
-        shape.setFillColor(sf::Color::Green);
-    } else if (role == "Soldier") {
-        shape.setFillColor(sf::Color::Red);
-    } else if (role == "Pastuh") {
-        shape.setFillColor(sf::Color::Yellow);
-    } else if (role == "Builder") {
-        shape.setFillColor(sf::Color::Blue);
-    } else if (role == "Cleaner") {
-        shape.setFillColor(sf::Color::Magenta);
-    } else {
-        shape.setFillColor(sf::Color::White); // Norole
-    }
-
-    // Обновление текста
-    roleText.setString(role);
-    
-    // Центрирование текста под муравьем
-    const sf::FloatRect textBounds = roleText.getLocalBounds();
-    roleText.setOrigin({textBounds.width / 2.f, 0.f});
-    roleText.setPosition(shape.getPosition() + sf::Vector2f{0.f, 12.f});
-
-    // Анимация движения
-    if (ant->getRoleName() != "Norole") {
-        const float angle = std::rand() % 360;
-        const float distance = 0.5f;
-        shape.move({distance * std::cos(angle * 3.14159f / 180.f), 
-                   distance * std::sin(angle * 3.14159f / 180.f)});
+void Anthill::lowbranch() 
+{
+    size_of_anthill *= 0.95;
+    maxAnts *= 0.95;
+    if (count_of_ants > maxAnts) 
+    {
+        for (size_t i = maxAnts; i < ants.size(); ++i) 
+        {
+            delete ants[i];
+        }
+        ants.resize(maxAnts);
+        count_of_ants = maxAnts;
     }
 }
 
-void SFMLAnt::draw(sf::RenderWindow& window) const {
-    window.draw(shape);
-    window.draw(roleText);
+void Anthill::showAllAnts() const 
+{
+    for (const auto& a : ants)
+        a->print();
 }
 
-void SFMLAnt::setPosition(sf::Vector2f pos) {
-    shape.setPosition(pos);
-    roleText.setPosition(pos + sf::Vector2f{0.f, 12.f});
+Ant* Anthill::getAnt(int i) 
+{
+    return ants[i];
 }
 
-sf::Vector2f SFMLAnt::getPosition() const {
-    return shape.getPosition();
-}
-
-SFMLAnthill::SFMLAnthill(Anthill* anthill, float x, float y) 
-    : anthill(anthill), position{x, y} {
-    
-    // Настройка графического представления муравейника
-    shape.setRadius(static_cast<float>(anthill->getSize()) * 5.f);
-    shape.setOrigin({shape.getRadius(), shape.getRadius()});
-    shape.setPosition(position);
-    shape.setFillColor(sf::Color{139, 69, 19}); // Коричневый
-    shape.setOutlineThickness(3.f);
-    shape.setOutlineColor(sf::Color{101, 67, 33}); // Темно-коричневый
-
-    // Создание графических представлений муравьев
-    for (auto* ant : anthill->getAllAnts()) {
-        addRandomAnt(ant);
-    }
-}
-
-void SFMLAnthill::addRandomAnt(Ant* ant) {
-    const float angle = static_cast<float>(std::rand() % 360);
-    const float distance = 10.f + std::rand() % static_cast<int>(shape.getRadius());
-    const float x = position.x + distance * std::cos(angle * 3.14159f / 180.f);
-    const float y = position.y + distance * std::sin(angle * 3.14159f / 180.f);
-    
-    sfmlAnts.emplace_back(ant, x, y);
-}
-
-void SFMLAnthill::update() {
-    // Обновление размера муравейника
-    const float newRadius = static_cast<float>(anthill->getSize()) * 5.f;
-    shape.setRadius(newRadius);
-    shape.setOrigin({newRadius, newRadius});
-
-    // Обновление муравьев
-    for (auto& sfmlAnt : sfmlAnts) {
-        sfmlAnt.update();
-    }
-
-    // Добавление новых муравьев при необходимости
-    while (sfmlAnts.size() < anthill->getAllAnts().size()) {
-        addRandomAnt(anthill->getAnt(sfmlAnts.size()));
-    }
-
-    // Удаление умерших муравьев
-    if (sfmlAnts.size() > anthill->getAllAnts().size()) {
-        sfmlAnts.resize(anthill->getAllAnts().size());
-    }
-}
-
-void SFMLAnthill::draw(sf::RenderWindow& window) const {
-    window.draw(shape);
-    for (const auto& sfmlAnt : sfmlAnts) {
-        sfmlAnt.draw(window);
-    }
-}
-
-void SFMLAnthill::addAnt(const SFMLAnt& ant) {
-    sfmlAnts.push_back(ant);
+vector<Ant*>& Anthill::getAllAnts() 
+{
+    return ants;
 }
