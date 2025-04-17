@@ -25,13 +25,19 @@ void Enemy::attack(Anthill& hill)
                 cout << "The soldier and the enemy both died." << endl;
                 hill.death(i);
                 i--;
+                if(hill.ants.size() == 0) {
+                    break;
+                }
             }
             else
             {
                 cout << "The enemy has won, the anthill has lost its food!" << endl;
                 hill.death(i);
                 i--;
-                hill.newFood(-30);
+                hill.newFood(-5);
+                if(hill.ants.size() == 0) {
+                    break;
+                }
             }
             return;
         }
@@ -40,11 +46,10 @@ void Enemy::attack(Anthill& hill)
     if (!soldier_found)
     {
         cout << "The soldier has not been found. The enemy took the food and killed one ant." << endl;
-        auto& ants = hill.getAllAnts();
-        if (!ants.empty())
-        {
-            ants[0]->setHealth(0);
-            hill.newFood(-30);
+        if(hill.ants.size()>=1){
+            hill.ants.pop_back();
+            hill.newFood(-5);
         }
+        
     }
 }

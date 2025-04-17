@@ -147,6 +147,7 @@ private:
 
 public:
     int age = 0;
+    int maxAge;
     int health = 100;
     Ant(SoldierInformer& sInformer, BuilderInformer& bInformer, NannyInformer& nInformer, CleanerInformer& cInformer, PastuhInformer& pInformer);
     ~Ant();

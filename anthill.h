@@ -21,17 +21,17 @@ public:
     Anthill(int size, int ants, int food);
     ~Anthill();
     void createAnt(vector<Ant*>& a, int k);
-    void newFood(int f);
-    void newBranches(int b); 
-    void newAnts(int k);
-    void emptyfood(); // если еды не хватило на всех, вызывается эта функция
-    void lowbranch();
+    void newFood(int f); // добавляет ебу в запасы
+    void newBranches(int b); // эта ф-я вызывается когда принесли новые ветки, рассчет такой: каждые новые пять веток добавляют в местимость плюс 1 муравей и 1 значение еды 
+    void newAnts(int k); // рождает новых муравьев в количестве к
+    void emptyfood(int i); //вызывается если еды не хватило на всех, тогда эта ф-я отнимает 10 здоровья у всех, кому не хватило
+    void lowbranch(); // ф-я вызывается если не принесли веток в течение опр колва дней, прописанного в life, уменьшает количество муравьев на 5 и размер муравейника на 5 и макс запас еды
     void showAllAnts() const;
-    void controlLives(); // 
+    void controlLives(); // вызывается в конце дня, проверяет всем ли меньше 10 дней, кормит муравьев, кому не хватило еды вызывается empty food
     void death(int i); // убивает муравья
 
     Ant* getAnt(int i);
-    vector<Ant*>& getAllAnts();
+    void getAllAnts(vector<Ant*> antsinhill);
 
     SoldierInformer& getSoldierInformer() { return soldierInformer; }
     BuilderInformer& getBuilderInformer() { return builderInformer; }

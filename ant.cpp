@@ -169,18 +169,18 @@ void Ant::change_role() {
 
     delete role;
 
-    if (age < 10)
+    if (age < maxAge/5)
     {
         role = new Norole();
     }
-    else if (age < 18)
+    else if (age < maxAge/5*2)
     {
         role = new Nanny();
         nannyInformer.subscribe(this);
     }
-    else if (age < 30)
+    else if (age < maxAge/5*3)
     {
-        if (health >= 50)
+        if (health >= 90)
         {
             role = new Soldier();
             soldierInformer.subscribe(this);
@@ -190,7 +190,7 @@ void Ant::change_role() {
             role = new Pastuh();
         }
     }
-    else if (age < 45)
+    else if (age < maxAge/5*4)
     {
         role = new Builder();
         builderInformer.subscribe(this);
@@ -201,17 +201,7 @@ void Ant::change_role() {
     }
 }
 
-void Ant::change_age()
-{
-    age += 1;
-    change_role();
-}
 
-void Ant::change_health(int current_health)
-{
-    health = current_health;
-    change_role();
-}
 
 void Ant::work() const
 {
@@ -228,15 +218,7 @@ string Ant::getRoleName() const
     return role->getRoleName();
 }
 
-int Ant::getHealth() const
-{
-    return health;
-}
 
-void Ant::setHealth(int h)
-{
-    health = h;
-}
 
 void Ant::notify(const string& message_) {
     cout << "Ant (" << getRoleName() << ") received the message: " << message_ << endl;
