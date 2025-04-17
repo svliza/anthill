@@ -1,4 +1,5 @@
 #include "ant.h"
+#include <algorithm>
 
 using namespace std;
 
