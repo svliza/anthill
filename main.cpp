@@ -1,7 +1,9 @@
 #include <iostream> 
 #include <cstdlib> 
 #include <ctime> 
-#include "func.h" 
+#include "ant.h"
+#include "anthill.h"
+#include "enemy.h"
 using namespace std;
 int main() 
 { 
